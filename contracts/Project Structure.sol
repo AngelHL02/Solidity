@@ -9,6 +9,7 @@ contract medical{
     mapping (address => Patient) public patient; 
     bool public eligibility; //default eligibility is false
 
+//+public --> 
     constructor(){
         manager = msg.sender;
     }
@@ -20,10 +21,13 @@ contract medical{
         uint timestamp; 
     }
 
-    //for queuing of services (e.g. for A&E services)
+    //requesting for services (e.g. 
+
+    //for queuing of services (e.g. for A&E services) --> Check status
     function queue() public{
 
     }
+    //Ref: https://ethereum.stackexchange.com/questions/9858/solidity-is-there-a-way-to-get-the-timestamp-of-a-transaction-that-executed
 
     //verifies the signature
     function verify_signature(string memory _name) public returns (bool){
