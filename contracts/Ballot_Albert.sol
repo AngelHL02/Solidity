@@ -38,19 +38,33 @@ contract Ballot {
         registerList.push(toVoter);
     }
 
-    function vote(uint8 toProposal) public {
+/*
+    function check_proposal_length() public view returns(uint){
+        return proposals.length;
+    }
+*/
+
+    function vote(uint8 toProposal) public { 
         Voter storage sender = voters[msg.sender];
         require(!sender.voted, "Vote completed!");
-        require(toProposal < proposals.length, "Proposal out of range.");
+        require(toProposal <= proposals.length, "Proposal out of range.");
+        toProposal --; //toProposal=toProposal-1;
         sender.voted = true;
         sender.vote = toProposal; 
         proposals[toProposal].voteCount += sender.weight; 
     }
 
     function check_votes(uint8 index) public view returns (uint voteCount){
-        require(index < proposals.length, "Proposal out of range.");
+        require(index <= proposals.length, "Proposal out of range.");
+        index --; //index=index-1;
         voteCount = proposals[index].voteCount;
     }
+
+/*
+    function see_proposal0() public view returns(uint _voteCount){
+        return proposals[0].voteCount;
+    }
+*/
 
     function winningProposal() public view returns (uint[] memory) {
         uint winningMaxVoteCount = 0;
