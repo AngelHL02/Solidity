@@ -9,10 +9,8 @@ contract Ballot{
     struct Voter{
         //weight of the voter, can be used to give certain votes more power
         uint weight; //uint256 if not specified
-        //whether or not the voter has voted
-        bool voted;
-        //index of the proposal that the voter voted for; begins with 0
-        uint8 vote;
+        bool voted; //whether or not the voter has voted
+        uint8 vote; //index of the proposal that the voter voted for; begins with 0
         //address delegate;
     }
 
@@ -77,22 +75,6 @@ contract Ballot{
     }
 */
 
-    function return_registeredList() public view returns (address[] memory) {
-    // Create a dynamic array to store the registered voters
-    address[] memory registeredVoters = new address[](msg.sender.balance);
-
-    uint count = 0;
-    // Iterate through the mapping of voters and add each registered voter to the array
-    for (uint i = 0; i < registeredVoters.length; i++) {
-        address voterAddress = registeredVoters[i];
-        if (voters[voterAddress].weight > 0) {
-            registeredVoters[count] = voterAddress;
-            count++;
-        }
-    }
-    return registeredVoters;
-    }
-
 /*  Original code for function vote()
     function vote(uint8 toProposal) public{
         //store it in "storage" for permanent record
@@ -110,6 +92,23 @@ contract Ballot{
         proposals[toProposal].voteCount += sender.weight; 
     }
 */
+
+    function return_registeredList() public view returns (address[] memory) {
+    // Create a dynamic array to store the registered voters
+    address[] memory registeredVoters = new address[](msg.sender.balance);
+
+    uint count = 0;
+    // Iterate through the mapping of voters and add each registered voter to the array
+    for (uint i = 0; i < registeredVoters.length; i++) {
+        address voterAddress = registeredVoters[i];
+        if (voters[voterAddress].weight > 0) {
+            registeredVoters[count] = voterAddress;
+            count++;
+        }
+    }
+    return registeredVoters;
+    }
+
 
     function vote(uint8 toProposal) public{
         //store it in "storage" for permanent record
