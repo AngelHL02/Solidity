@@ -1,10 +1,23 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.5.9;
 
+/* Explanation
+    This contract demonstrates the use of an enum to keep track of stages of a process.
+    This contract has 4 stages: Init, Reg, Vote,Done, and stage changes are enacted 
+    approximately every 1 minute.
+    The now Solidity defined variable is used to track time.
+    The advanceState function is used to track time
+    The advanceState function is used to change the stage when the required time has passed.
+    The time duration for each stage can be adjusted based on the specific application required.
+*/
+
 contract StateTransV2 {
 
+    //Enum to keep track of stages
     enum Stage{Init,Reg,Vote,Done}
     Stage public stage;
+
+    //Varaiables to track time
     uint startTime;
     uint public timeNow;
 
@@ -18,12 +31,16 @@ contract StateTransV2 {
     - timeNow variable is defined for understanding the process
     - you can simply use "now", which is a Solidity defined variable
     Of coz, time duration for the stages may depend on your application
+
+    1 minute is set to illustrate the working
+    Advance the stage approximatel every 1 minute
 */
 
     function advanceState() public{
         timeNow = now;
         if (timeNow>(startTime+1 minutes)) {
-            startTime = timeNow;
+            startTime = timeNow; //Update the starttime
+            //Advance to the next stage
             if (stage==Stage.Init) {stage = Stage.Reg; return;}
             if (stage==Stage.Reg) {stage = Stage.Vote; return;}
             if (stage==Stage.Vote) {stage = Stage.Done; return;}
