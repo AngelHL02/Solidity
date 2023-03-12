@@ -1,3 +1,10 @@
+/* Edit History
+
+result returned by function winningProposal() is 0-based for the indexing
+function vote() is 1-based.
+
+*/
+
 //Voting system
 // SPDX-License-Identifier: GPL-3.0
 
@@ -22,7 +29,6 @@ contract Ballot{
         //could add other data about proposal
     }
 
-    //empty array
     //Declare the proposals array
     Proposal[] proposals;
     //keep check which proposal have been voted (count)
@@ -50,24 +56,33 @@ contract Ballot{
         voters[toVoter].voted = false; //reset voted status to false
     }
 
+/*  Initial Code for function vote()
     function vote(uint8 toProposal) public{
-        //store it in "storage" for permanent record
-        //the address who clicked this function
         Voter storage sender = voters[msg.sender];
 
-        //check whether the voters have votes
-        //	|| (Logical OR)
-        //If any of the two operands are non-zero, then the condition becomes true.
-
-        //check whether the sender has voted or proposalNum out of range
         if (sender.voted || toProposal >= proposals.length) return;
-
-        //if false for the both conditions, execute
         sender.voted = true;
         sender.vote = toProposal; 
         proposals[toProposal].voteCount += sender.weight; 
     }
 
+*/
+    function vote(uint8 toProposal) public{
+        //store it in "storage" for permanent record
+        //the address who clicked this function
+        Voter storage sender = voters[msg.sender];
+
+        //check whether the voters have voted
+        //	|| (Logical OR)
+        //Stop the process if the sender has voted or proposalNum out of range
+        if (sender.voted || toProposal >= proposals.length) return;
+        toProposal --;
+        sender.voted = true;
+        sender.vote = toProposal; 
+        proposals[toProposal].voteCount += sender.weight; 
+    }
+
+/*  Initial Code for function winningProposal()
     //determine the winning proposal
     //view mode --> Read only
     function winningProposal() public view returns (uint8 _winningProposal) {
@@ -83,10 +98,10 @@ contract Ballot{
                 winningVoteCount = proposals[prop].voteCount;
                 _winningProposal = prop;
             }
-
     }
 
-/*
+*/
+
     //determine the winning proposal
     //view mode --> Read only
     function winningProposal() public view returns 
@@ -103,10 +118,7 @@ contract Ballot{
                 winningVoteCount = proposals[prop].voteCount;
                 _winningProposal = prop;
             }
-            //winVoteCount = proposals[prop].voteCount;
-    
+            //return _winningProposal++;
     }
-
-*/
 
 }
