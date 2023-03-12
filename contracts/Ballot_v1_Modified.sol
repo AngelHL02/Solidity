@@ -156,7 +156,7 @@ contract Ballot{
 
 */
 
-/*. Old version: function winningProposal()
+    //V2: function winningProposal()
     //determine the winning proposal
     //LIMITATION: Cannot encounter case for same votes (i.e. >1 winners)
     //view mode --> Read only
@@ -164,22 +164,18 @@ contract Ballot{
             (uint8 _winningProposal, uint winningVoteCount) {
         //uint256 winningVoteCount = 0;
 
-        //Iterate through all proposals to find the one with most votes
-        //for loop
+        //Iterate through all proposals to find the one with most votes (for loop)
         //for prop=0 to proposals.lenth, prop ++ == prop +1 
         for (uint8 prop=0;prop<proposals.length;prop++)
-            
-            //if voteCount > 0, e.g. =1
+
             if (proposals[prop].voteCount > winningVoteCount){
                 winningVoteCount = proposals[prop].voteCount;
                 _winningProposal = prop;
             }
-            //winVoteCount = proposals[prop].voteCount;
+
     }
 
-*/
-
-    //returning an array of tie winners
+/*    //returning an array of tie winners
     function winningProposal() public view returns 
             (uint[] memory _results) {
             //, uint8 _winningProposal, uint _winVoteCount, uint8 _NoOfWinners) {
@@ -214,7 +210,9 @@ contract Ballot{
         }
         return _results = resultListOfWinners;
         }
-    
+
+*/
+
 }
 
 
