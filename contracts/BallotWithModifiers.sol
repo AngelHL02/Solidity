@@ -22,14 +22,14 @@ contract Ballot {
     // Declare the proposals array
     Proposal[] proposals; 
 
-    enum Stage { Init, Reg, Vote, Done }
-
     // Declare the chairperson's address and the voters mapping
     address chairperson; 
     mapping(address => Voter) voters;
 
+    enum Stage { Init, Reg, Vote, Done }
+
     uint startTime;
-    Stage public stage;
+    Stage public stage = Stage.Init;
 
     modifier validStage(Stage reqStage){
         require(stage==reqStage);
@@ -40,11 +40,12 @@ contract Ballot {
         chairperson = msg.sender; 
         voters[chairperson].weight = 2; 
         proposals.length = _numProposals;
+
         startTime = now;
-        stage = Stage.Init;
+        stage = Stage.Reg;
     }
 
-    event Sent(string message);
+    //event Sent(string message);
 
     //Call the modifier validStage()
     function register(address toVoter) public validStage(Stage.Reg) {
@@ -54,7 +55,7 @@ contract Ballot {
         voters[toVoter].voted = false;
 
         // Move to voting stage after 10 seconds of registration
-        if (now > (startTime + 10 seconds)) {
+        if (now > (startTime + 1 minutes)) {
             stage = Stage.Vote;
             startTime = now;
         }
@@ -87,7 +88,7 @@ contract Ballot {
     }
 
     //Returning an array of tie winners
-    function winningProposal() public  validStage(Stage.Done) view returns (uint[] memory _results) {
+    function winningProposal() public validStage(Stage.Done) view returns (uint[] memory _results) {
         uint winningMaxVoteCount = 0;
         uint8 countNoOfWinners = 0;
 
@@ -144,4 +145,5 @@ contract Ballot {
         if (msg.sender != chairperson) return;
         stage = Stage.Done;
     }
+
 }
