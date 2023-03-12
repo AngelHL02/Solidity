@@ -1,3 +1,4 @@
+//10 Mar Lesson Demo (T8)
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.5.9;
 
@@ -38,7 +39,7 @@ contract StateTransV2 {
 
     function advanceState() public{
         timeNow = now;
-        if (timeNow>(startTime+1 minutes)) {
+        if (timeNow>(startTime+10 seconds)) {
             startTime = timeNow; //Update the starttime
             //Advance to the next stage
             if (stage==Stage.Init) {stage = Stage.Reg; return;}
