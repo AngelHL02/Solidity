@@ -1,4 +1,13 @@
-//another fix of the out of gas:
+/* Edit History
+
+Solved: 
+function vote() and check_votes() are 1-based. (Users can vote by Proposal No.)
+
+13 Mar (01:30): 
+1 bug remaining: [] returned by function winningProposal() is 0-based for the indexing
+
+*/
+
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
@@ -107,7 +116,7 @@ contract Ballot {
     }
 
 
-/*  //function winningProposal() suggested by ChatGPT 
+/*  //function winningProposal() suggested by ChatGPT <------Still bug
     function winningProposal() public view returns (uint[] memory) {
     uint winningMaxVoteCount = 0;
     uint8 countNoOfWinners = 0;
