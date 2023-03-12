@@ -1,3 +1,10 @@
+/* Edit History
+
+result returned by function winningProposal() is 0-based for the indexing
+function vote() is 1-based.
+
+*/
+
 //-------------This code is modified based on Ballot_v1.sol-------------
 //Voting system
 
@@ -75,24 +82,6 @@ contract Ballot{
     }
 */
 
-/* //Original code for function vote()
-    function vote(uint8 toProposal) public{
-        //store it in "storage" for permanent record
-        //the address who clicked this function
-        Voter storage sender = voters[msg.sender];
-
-        //check whether the voters have votes
-        //	|| (Logical OR)
-        //If any of the two operands are non-zero, then the condition becomes true.
-
-        //Stop the process if the sender has voted or proposalNum out of range
-        if (sender.voted || toProposal >= proposals.length) return;
-        sender.voted = true;
-        sender.vote = toProposal; 
-        proposals[toProposal].voteCount += sender.weight; 
-    }
-*/
-
 /*  function return_registeredList() <--- gas leakage
     function return_registeredList() public view returns (address[] memory) {
     // Create a dynamic array to store the registered voters
@@ -108,6 +97,25 @@ contract Ballot{
         }
     }
     return registeredVoters;
+    }
+*/
+
+/* //Original code for function vote()
+    function vote(uint8 toProposal) public{
+        //store it in "storage" for permanent record
+        //the address who clicked this function
+        Voter storage sender = voters[msg.sender];
+
+        //check whether the voters have votes
+        //	|| (Logical OR)
+        //If any of the two operands are non-zero, then the condition becomes true.
+
+        //Stop the process if the sender has voted or proposalNum out of range
+        if (sender.voted || toProposal >= proposals.length) return;
+        toProposal --;
+        sender.voted = true;
+        sender.vote = toProposal; 
+        proposals[toProposal].voteCount += sender.weight; 
     }
 */
 
@@ -156,7 +164,7 @@ contract Ballot{
 
 */
 
-    //V2: function winningProposal()
+    //V2: function winningProposal() --- +uint winningVoteCount
     //determine the winning proposal
     //LIMITATION: Cannot encounter case for same votes (i.e. >1 winners)
     //view mode --> Read only
@@ -175,7 +183,8 @@ contract Ballot{
 
     }
 
-/*    //returning an array of tie winners
+/*  //V3: function winningProposal() ------ array[]
+    //returning an array of tie winners
     function winningProposal() public view returns 
             (uint[] memory _results) {
             //, uint8 _winningProposal, uint _winVoteCount, uint8 _NoOfWinners) {
