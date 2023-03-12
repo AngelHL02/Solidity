@@ -28,7 +28,6 @@ contract Ballot{
     address chairperson; 
     mapping(address => Voter) voters;
 
-    //Create a new ball with $(_numProposals) different proposal
     //For constructor whose code is run only when the contract is created
     constructor(uint8 _numProposals) public {
         //record the wallet address of the deployer
@@ -40,22 +39,24 @@ contract Ballot{
 
     event Sent(string message);
 
-    //Give $(toVoter) the right to vote on this ballot.
-    //Only be called by $(chairperson)
+/* //Original code for function register()
     function register(address toVoter) public{
-
-/*
         //only chairperson can register voters
         if (msg.sender!= chairperson || voters[toVoter].voted) return; //do nothing
-*/
-        if (msg.sender!= chairperson) emit 
-            Sent("Only chairperson can register user"); //do nothing
-        else if (voters[toVoter].voted) emit
-            Sent("Voter voted already.");
-        else{
-
         voters[toVoter].weight = 1;     //voters only have 1 vote
-        voters[toVoter].voted = false;} //reset voted status to false
+        voters[toVoter].voted = false; //reset voted status to false
+*/
+
+    //Give $(toVoter) the right to vote on this ballot.
+    //Only be called by $(chairperson) 
+    function register(address toVoter) public{
+
+        require(msg.sender == chairperson, "Only chairperson can register user");
+        require(!voters[toVoter].voted, "Voter voted already.");
+        voters[toVoter].weight = 1;
+        voters[toVoter].voted = false;
+        //registerList.push(toVoter);
+
     }
 
 /* //[BETA]: function register2() --> returns an array of registered users
@@ -74,7 +75,7 @@ contract Ballot{
     }
 */
 
-/*  Original code for function vote()
+/* //Original code for function vote()
     function vote(uint8 toProposal) public{
         //store it in "storage" for permanent record
         //the address who clicked this function
@@ -92,7 +93,7 @@ contract Ballot{
     }
 */
 
-/* //function return_registeredList()
+/*  function return_registeredList() <--- gas leakage
     function return_registeredList() public view returns (address[] memory) {
     // Create a dynamic array to store the registered voters
     address[] memory registeredVoters = new address[](msg.sender.balance);
@@ -114,26 +115,19 @@ contract Ballot{
         //store it in "storage" for permanent record
         //the address who clicked this function
         Voter storage sender = voters[msg.sender];
+        require(!sender.voted, "Vote completed!");
+        require(toProposal <= proposals.length, "Proposal out of range.");
 
-        //check whether the sender has voted or proposalNum out of range
-        if (sender.voted) emit Sent("Vote completed!");
-
-        else if (toProposal >= proposals.length) emit Sent("Proposal out of range.");
-        
-        else {//if false for the both conditions, execute
-            sender.voted = true;
-            sender.vote = toProposal; 
-            proposals[toProposal].voteCount += sender.weight; 
-        }
+        toProposal --; //toProposal=toProposal-1;
+        sender.voted = true;
+        sender.vote = toProposal; 
+        proposals[toProposal].voteCount += sender.weight; 
     }
 
     //function to show voteCount for a specific proposal
     function check_votes(uint8 index) public view returns (uint voteCount){
-        if (index >= proposals.length) {
-            // Handle the error by returning a default value or throwing an exception
-            // In this case, we return 0 as the default value
-            return 0;
-        }
+        require(index <= proposals.length, "Proposal out of range.");
+        index --; //index=index-1;
         voteCount = proposals[index].voteCount;
     }
 
@@ -142,13 +136,24 @@ contract Ballot{
 
     //#1
     function check_votes(uint8 index) public view returns (uint voteCount){
-        voteCount = proposals[index].voteCount;
+        voteCount = proposals[(index-1)].voteCount;
     }
 
     //#2
     function check_votes(uint8 index) public view returns (uint256) {
-        return proposals[index].voteCount;
+        return proposals[(index-1)].voteCount;
     }
+
+    //#3
+    function check_votes2(uint8 index) public view returns (uint voteCount){
+        if (index >= proposals.length) {
+            // Handle the error by returning a default value or throwing an exception
+            // In this case, we return 0 as the default value
+            return 0;
+        }
+        voteCount = proposals[(index-1)].voteCount;
+    }
+
 */
 
 /*. Old version: function winningProposal()
