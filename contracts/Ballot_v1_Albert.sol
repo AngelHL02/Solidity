@@ -1,13 +1,3 @@
-/* Edit History
-
-Solved: 
-function vote() and check_votes() are 1-based. (Users can vote by Proposal No.)
-
-13 Mar (01:30): 
-1 bug remaining: [] returned by function winningProposal() is 0-based for the indexing
-
-*/
-
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
@@ -107,7 +97,7 @@ contract Ballot {
         //add the indexes of proposal(s) with the max vote count to []
         for (uint i = 0; i < proposals.length; i++) {
             if ((proposals[i].voteCount == winningMaxVoteCount) && (winningMaxVoteCount != 0)){
-                resultListOfWinners[indexWinner] = i;
+                resultListOfWinners[indexWinner] = i+1;
                 indexWinner++;
             }
         }
