@@ -15,27 +15,30 @@ contract Ballot {
     struct Proposal {
         // No. of votes that the proposal has received
         uint voteCount; 
-        // Could add other data about proposal
     }
 
     // Declare the proposals array
     Proposal[] proposals; 
 
     enum Stage { Init, Reg, Vote, Done }
+    Stage public stage = Stage.Init;
 
     // Declare the chairperson's address and the voters mapping
-    address chairperson; 
+    address public chairperson; 
     mapping(address => Voter) voters;
 
     uint startTime;
-    Stage public stage;
 
     constructor(uint8 _numProposals) public {
         chairperson = msg.sender; 
         voters[chairperson].weight = 2; 
         proposals.length = _numProposals;
-        startTime = now;
-        stage = Stage.Init;
+        
+        //for (uint prop = 0; prop< _numProposals;prop++)
+            //proposals.push();
+
+        startTime = now; //i.e. the time now
+        stage = Stage.Reg; //begin the register stage
     }
 
     event Sent(string message);
@@ -111,9 +114,19 @@ contract Ballot {
         return _results = resultListOfWinners;
     }
     
-
     function done() public {
         if (msg.sender != chairperson) return;
         stage = Stage.Done;
     }
+
+    function sizeOfArray() public view returns(uint){
+        return proposals.length;
+    }
+
+/*  //Albert's version: function sizeOfArray()
+    function sizeOfArray() public view returns(uint sizeA){
+        sizeA = proposals.length;
+    }
+*/
+
 }
