@@ -1,10 +1,3 @@
-/* Edit History
-
-result returned by function winningProposal() is 0-based for the indexing
-function vote() is 1-based.
-
-*/
-
 //-------------This code is modified based on Ballot_v1.sol-------------
 //Voting system
 
@@ -32,7 +25,7 @@ contract Ballot{
     //keep check which proposal have been voted (count)
 
     //declare the chairperson's address and the voters mapping
-    address chairperson; 
+    address public chairperson; 
     mapping(address => Voter) voters;
 
     //For constructor whose code is run only when the contract is created
@@ -139,7 +132,7 @@ contract Ballot{
         voteCount = proposals[index].voteCount;
     }
 
-/*  Alternative method(s) to show voteCount for a specific proposal
+/*  Alternative method(s) for function check_votes()
     //Alternative
 
     //#1
@@ -178,7 +171,7 @@ contract Ballot{
 
             if (proposals[prop].voteCount > winningVoteCount){
                 winningVoteCount = proposals[prop].voteCount;
-                _winningProposal = prop;
+                _winningProposal = prop+1;
             }
 
     }
@@ -209,16 +202,17 @@ contract Ballot{
 
         uint indexWinner = 0;
 
-        // Loop through the array again to find the indexes of the maximum values
+        //add the indexes of proposal(s) with the max vote count to []
         for (uint i = 0; i < proposals.length; i++) {
             if ((proposals[i].voteCount == winningMaxVoteCount) && (winningMaxVoteCount != 0)){
-                //stores those indexes in the array: resultListOfWinners
-                resultListOfWinners[indexWinner] = i;
-                indexWinner++; //indexWinner=indexWinner+1
+                resultListOfWinners[indexWinner] = i+1;
+                indexWinner++;
             }
         }
-        return _results = resultListOfWinners;
-        }
+
+        return resultListOfWinners;
+    }
+
 
 */
 
