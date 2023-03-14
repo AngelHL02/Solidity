@@ -105,34 +105,4 @@ contract Ballot {
         return resultListOfWinners;
     }
 
-
-/*  //function winningProposal() suggested by ChatGPT <------Still bug
-    function winningProposal() public view returns (uint[] memory) {
-    uint winningMaxVoteCount = 0;
-    uint8 countNoOfWinners = 0;
-
-    for (uint prop = 0; prop < proposals.length; prop++) {
-        if (proposals[prop].voteCount > winningMaxVoteCount) {
-            winningMaxVoteCount = proposals[prop].voteCount;
-            countNoOfWinners = 1;
-        } else if (proposals[prop].voteCount == winningMaxVoteCount) {
-            countNoOfWinners++;
-        }
-    }
-
-    uint[] memory resultListOfWinners = new uint[](countNoOfWinners);
-
-    uint indexWinner = 1;
-
-    for (uint i = 0; i < proposals.length; i++) {
-        if ((proposals[i].voteCount == winningMaxVoteCount) && (winningMaxVoteCount != 0)){
-            resultListOfWinners[indexWinner] = i + 1;
-            indexWinner++;
-        }
-    }
-
-    return resultListOfWinners;
-}
-*/
-
 }
