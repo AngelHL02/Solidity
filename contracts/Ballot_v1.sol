@@ -1,10 +1,3 @@
-/* Edit History
-
-result returned by function winningProposal() is 0-based for the indexing
-function vote() is 1-based.
-
-*/
-
 //Voting system
 // SPDX-License-Identifier: GPL-3.0
 
@@ -82,7 +75,7 @@ contract Ballot{
         proposals[toProposal].voteCount += sender.weight; 
     }
 
-/*  Initial Code for function winningProposal()
+/*  //V1 - Initial Code for function winningProposal()
     //determine the winning proposal
     //view mode --> Read only
     function winningProposal() public view returns (uint8 _winningProposal) {
@@ -92,16 +85,17 @@ contract Ballot{
         //for loop
         //for prop=0 to proposals.lenth, prop ++ = prop +1 
         for (uint8 prop=0;prop<proposals.length;prop++)
-            
+
             //if voteCount > 0, e.g. =1
             if (proposals[prop].voteCount > winningVoteCount){
                 winningVoteCount = proposals[prop].voteCount;
-                _winningProposal = prop;
+                _winningProposal = prop+1;
             }
     }
 
-*/
+*/ 
 
+    //V2
     //determine the winning proposal
     //view mode --> Read only
     function winningProposal() public view returns 
@@ -113,12 +107,10 @@ contract Ballot{
         //for prop=0 to proposals.lenth, prop ++ = prop +1 
         for (uint8 prop=0;prop<proposals.length;prop++)
             
-            //if voteCount > 0, e.g. =1
             if (proposals[prop].voteCount > winningVoteCount){
                 winningVoteCount = proposals[prop].voteCount;
-                _winningProposal = prop;
+                _winningProposal = prop+1;
             }
-            //return _winningProposal++;
     }
 
 }
