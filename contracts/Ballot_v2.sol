@@ -195,7 +195,7 @@ contract Ballot {
         require(msg.sender == chairperson, 
         "Only chairperson is allow to use this function");
         if (block.timestamp>startTime+2 minutes){
-            stage = Stage.Done;
+            stage = Stage.Done; //Completed
             emit votingCompleted();
         }
 
