@@ -1,9 +1,3 @@
-/* Edit History
-
-bug remaining: [] returned by function winningProposal() is 0-based for the indexing
-
-*/
-
 //-------------This code is modified based on Ballot_v1_Albert.sol-------------
 //With the use of Stages & Modifiers
 
@@ -58,6 +52,10 @@ contract Ballot {
     //--------------------------------------------------------
         }
 
+    }
+
+    function timeNow() public view returns(uint){
+        return block.timestamp;
     }
 
 /*   //initial code for function register()
@@ -149,10 +147,9 @@ contract Ballot {
             (uint8 _winningProposal, uint winningVoteCount) {
         for (uint8 prop=0;prop<proposals.length;prop++)
             
-            //if voteCount > 0, e.g. =1
             if (proposals[prop].voteCount > winningVoteCount){
                 winningVoteCount = proposals[prop].voteCount;
-                _winningProposal = prop;
+                _winningProposal = prop+1;
             }
         assert(winningVoteCount>0);
     }
@@ -194,34 +191,14 @@ contract Ballot {
 
     }
 
-
-/*  //function winningProposal() suggested by ChatGPT 
-    function winningProposal() public view returns (uint[] memory) {
-    uint winningMaxVoteCount = 0;
-    uint8 countNoOfWinners = 0;
-
-    for (uint prop = 0; prop < proposals.length; prop++) {
-        if (proposals[prop].voteCount > winningMaxVoteCount) {
-            winningMaxVoteCount = proposals[prop].voteCount;
-            countNoOfWinners = 1;
-        } else if (proposals[prop].voteCount == winningMaxVoteCount) {
-            countNoOfWinners++;
+    function done() public {
+        require(msg.sender == chairperson, 
+        "Only chairperson is allow to use this function");
+        if (block.timestamp>startTime+2 minutes){
+            stage = Stage.Done;
+            emit votingCompleted();
         }
+
     }
-
-    uint[] memory resultListOfWinners = new uint[](countNoOfWinners);
-
-    uint indexWinner = 1;
-
-    for (uint i = 0; i < proposals.length; i++) {
-        if ((proposals[i].voteCount == winningMaxVoteCount) && (winningMaxVoteCount != 0)){
-            resultListOfWinners[indexWinner] = i + 1;
-            indexWinner++;
-        }
-    }
-
-    return resultListOfWinners;}
-
-*/
 
 }
