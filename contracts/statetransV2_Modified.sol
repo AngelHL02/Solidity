@@ -12,7 +12,7 @@ pragma solidity ^0.5.9;
     The time duration for each stage can be adjusted based on the specific application required.
 */
 
-contract StateTransV2 {
+contract StateTransV2_Modified {
 
     //Enum to keep track of stages
     enum Stage{Init,Reg,Vote,Done}
@@ -20,7 +20,7 @@ contract StateTransV2 {
 
     //Varaiables to track time
     uint startTime;
-    uint public timeNow;
+    uint public timeAdv;
 
     constructor() public {
         stage = Stage.Init;
@@ -29,7 +29,7 @@ contract StateTransV2 {
 
 /*  Notes: Stage Change
     - Assuming the Stage change has to be enacted APPROX every 1 minute
-    - timeNow variable is defined for understanding the process
+    - timeAdv variable is defined for understanding the process
     - you can simply use "now", which is a Solidity defined variable
     Of coz, time duration for the stages may depend on your application
 
@@ -42,9 +42,9 @@ contract StateTransV2 {
     }
 
     function advanceState() public{
-        timeNow = now;
-        if (timeNow>(startTime+10 seconds)) {
-            startTime = timeNow; //Update the starttime
+        timeAdv = now;
+        if (timeAdv>(startTime+10 seconds)) {
+            startTime = timeAdv; //Update the starttime
             //Advance to the next stage
             if (stage==Stage.Init) {stage = Stage.Reg; return;}
             if (stage==Stage.Reg) {stage = Stage.Vote; return;}
