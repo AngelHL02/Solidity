@@ -43,5 +43,4 @@ contract Coin {
         //only if the receiver "listen" to the event
     }
 
-}
-
+} 
