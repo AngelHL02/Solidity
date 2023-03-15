@@ -12,7 +12,7 @@ pragma solidity ^0.5.9;
     The time duration for each stage can be adjusted based on the specific application required.
 */
 
-contract StateTransV2_Modified {
+contract StateTransV2_AL {
 
     //Enum to keep track of stages
     enum Stage{Init,Reg,Vote,Done}
