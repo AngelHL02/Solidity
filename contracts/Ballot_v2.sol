@@ -30,10 +30,11 @@ contract Ballot {
     //-------------------newly added parts-------------------
     event votingCompleted();
 
+    //Used to Keep track of stages
     enum Stage { Init, Reg, Vote, Done }
 
-    uint startTime;
-    Stage public stage = Stage.Init; //Keep track of stages
+    uint public startTime;
+    Stage public stage = Stage.Init; //0
 
     modifier validStage(Stage reqStage){
         require(stage==reqStage);
@@ -48,10 +49,12 @@ contract Ballot {
         //proposals = Proposal[chairperson].voteCount = _numProposals;
         for (uint8 i = 0; i < _numProposals; i++) {
             proposals.push(Proposal(0));
+            //initializes the vote count of the new proposal to be 0, 
+            //which means that no one has voted for or against it yet.
 
     //-------------------newly added parts-------------------
         startTime = block.timestamp; 
-        stage = Stage.Reg;
+        stage = Stage.Reg; //1
     //--------------------------------------------------------
         }
 
@@ -77,8 +80,8 @@ contract Ballot {
         voters[toVoter].weight = 1;
         voters[toVoter].voted = false;
         registerList.push(toVoter);
-        if (block.timestamp > (startTime+ 30 seconds)) {
-            stage = Stage.Vote;
+        if (block.timestamp > (startTime+ 1 minutes)) {
+            stage = Stage.Vote; //2
         }
     }
 
@@ -114,13 +117,12 @@ contract Ballot {
         sender.vote = toProposal; 
         proposals[toProposal].voteCount += sender.weight; 
 
-        if (block.timestamp> (startTime+ 30 seconds)) {
+        if (block.timestamp> (startTime+ 1 minutes)) {
             stage = Stage.Done;
             emit votingCompleted();
         }
 
     }
-
 
     function check_votes(uint8 index) public view returns (uint voteCount){
         require(index <= proposals.length, "Proposal out of range.");
@@ -180,8 +182,9 @@ contract Ballot {
 
         //add the indexes of proposal(s) with the max vote count to []
         for (uint i = 0; i < proposals.length; i++) {
-            if ((proposals[i].voteCount == winningMaxVoteCount) && (winningMaxVoteCount != 0)){
-                resultListOfWinners[indexWinner] = i;
+            if ((proposals[i].voteCount == winningMaxVoteCount) 
+                && (winningMaxVoteCount != 0)){
+                resultListOfWinners[indexWinner] = i+1;
                 indexWinner++;
             }
         }
