@@ -157,6 +157,7 @@ contract Ballot{
 
 */
 
+/*
     //V2: function winningProposal() --- +uint winningVoteCount
     //determine the winning proposal
     //LIMITATION: Cannot encounter case for same votes (i.e. >1 winners)
@@ -176,7 +177,8 @@ contract Ballot{
 
     }
 
-/*  //V3: function winningProposal() ------ array[]
+*/
+  //V3: function winningProposal() ------ array[]
     //returning an array of tie winners
     function winningProposal() public view returns 
             (uint[] memory _results) {
@@ -212,9 +214,6 @@ contract Ballot{
 
         return resultListOfWinners;
     }
-
-
-*/
 
 }
 

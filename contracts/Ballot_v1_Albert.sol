@@ -96,7 +96,8 @@ contract Ballot {
 
         //add the indexes of proposal(s) with the max vote count to []
         for (uint i = 0; i < proposals.length; i++) {
-            if ((proposals[i].voteCount == winningMaxVoteCount) && (winningMaxVoteCount != 0)){
+            if ((proposals[i].voteCount == winningMaxVoteCount) 
+                && (winningMaxVoteCount != 0)){
                 resultListOfWinners[indexWinner] = i+1;
                 indexWinner++;
             }

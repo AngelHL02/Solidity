@@ -105,7 +105,8 @@ contract Ballot {
 
         // Loop through the array again to find the indexes of the maximum values
         for (uint i = 0; i < proposals.length; i++) {
-            if ((proposals[i].voteCount == winningMaxVoteCount) && (winningMaxVoteCount != 0)){
+            if ((proposals[i].voteCount == winningMaxVoteCount) 
+                && (winningMaxVoteCount != 0)){
                 // Stores those indexes in the array: resultListOfWinners
                 resultListOfWinners[indexWinner] = i;
                 indexWinner++;
