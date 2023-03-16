@@ -50,21 +50,6 @@ contract medical{
         }
     }
 
-/*
-    function register(address toVoter) public validStage(Stage.Reg) {
-        require(msg.sender == chairperson, "Only chairperson can register user");
-        require(!voters[toVoter].voted, "Voter voted already.");
-
-        voters[toVoter].weight = 1;
-        voters[toVoter].voted = false;
-        registerList.push(toVoter);
-        if (block.timestamp > (startTime+ 1 minutes)) {
-            stage = Stage.Vote; //2
-        }
-    }
-*/
-
-
     //requesting for services (e.g. AME/
     function request(uint) public{
 
