@@ -3,32 +3,31 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-//in parall
+//in parallel
 
 /*
-The Callee and Caller contract are simply 2 contracts that interacts with 
-each other by calling each other's function(s).
+    The Callee and Caller contract are simply 2 contracts that interacts with 
+    each other by calling each other's function(s).
 
-The Callee contract has 2 functions that can be called by the Caller contract,
-and the caller contract has 3 functions that call functions in the Callee
-contract.
+    The Callee contract has 2 functions that can be called by the Caller contract,
+    and the caller contract has 3 functions that call functions in the Callee
+    contract.
 
-In summary, while the Caller and Callee contracts are related and interact with
-each other.
+    In summary, while the Caller and Callee contracts are related and interact with
+    each other.
 
-They are seperate contracts and do not have a parent-child relationship.
+    They are seperate contracts and do not have a parent-child relationship.
 
 */
 
 contract Callee {
     uint public x;
-    uint public value;
+    uint public value; //Last transaction's value
 
 /*  function setX() and setXandSendEther() is to help you distinguish the
-difference between the use of "payable"
+    difference between the use of "payable"
 
-"msg.value" contains the Ether value
-
+    "msg.value" contains the Ether value.
 */
 
     //This function sets the value of x and returns it
@@ -38,7 +37,7 @@ difference between the use of "payable"
     }
 
 /*  This function sets the value of x, stores the amount of ether sent with
-the transaction in the value variable, and returns both x and value.
+    the transaction in the value variable, and returns both x and value.
 */
 
     function setXandSendEther(uint _x) public payable returns (uint, uint) {
@@ -48,10 +47,11 @@ the transaction in the value variable, and returns both x and value.
     }
 
 /*
-To check the total amount of Ether stored in the Callee contract
-In Solidity, address(this) refers to the address of the current 
-contract instance, and the balance property of an address represents
-the current balance of that address in units of wei.
+    To check the total amount of Ether stored in the Callee contract.
+
+    In Solidity, address(this) refers to the address of the current 
+    contract instance, and the balance property of an address represents
+    the current balance of that address in units of wei.
 
 */
     function getContractBalance() public view returns(uint256){
@@ -61,13 +61,13 @@ the current balance of that address in units of wei.
 }
 
 /*
-Another smart contract, needs to use the dropdown list to choose it
-and then deploy it.
+    Another smart contract, needs to use the dropdown list to choose it
+    and then deploy it.
 
-The Caller contract does not have any state variables,
-because it does not need to store any data between function calls,
-and instead simply passes parameters and receives returned values from
-the Callee contract using local variables. 
+    The Caller contract does not have any state variables,
+    because it does not need to store any data between function calls,
+    and instead simply passes parameters and receives returned values from
+    the Callee contract using local variables. 
 
 */
 
@@ -78,6 +78,7 @@ contract Caller {
     Without address as input parameter
     Callee is the name of the contract which it is calling
 */
+
     //This functions sets the value of x and returns it
     function setX(Callee _callee, uint _x) public {
         uint x = _callee.setX(_x);
@@ -86,14 +87,27 @@ contract Caller {
     //Method 2: to change the X value of Callee
     //With address as input parameter
 
-    //Callee is the data type, callee is the name of variable
+/*  This function calls the setXandSendEtherfunction of the Callee 
+    contract with the provided parameter _x and stores the result in a 
+    local variable x.
+*/
+
     function setXFromAddress(address _addr, uint _x) public {
+        //Callee is the data type, callee is the name of variable
         Callee callee = Callee(_addr);
         callee.setX(_x);
     }
 
-    // ":" sets the value variable
+/*
+    This function calls the setXandSendEther function of the Callee contract with the provided parameter _x
+    and the amount of ether sent with the transaction.
+
+    It stores the returned values of x and value in local variables with the same name.
+    The payable keyword indicates that this function can receive ether as part of the transaction.
+*/
+
     function setXandSendEther(Callee _callee, uint _x) public payable {
+        // ":" sets the value variable
         (uint x, uint value) = _callee.setXandSendEther{value: msg.value}(_x);
     }
 }
