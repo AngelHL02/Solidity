@@ -8,7 +8,7 @@ contract Ballot {
     struct Voter {
         uint weight;
         bool voted;
-        uint8 vote;
+        uint8 vote; //index of the proposal that the voter voted
     }
     
     struct Proposal {
@@ -19,7 +19,6 @@ contract Ballot {
     address public chairperson;
     mapping(address => Voter) voters;
     address[] registerList;
-
 
     //-------------------newly added parts-------------------
     event votingCompleted();

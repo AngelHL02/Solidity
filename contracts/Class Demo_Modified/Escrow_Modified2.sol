@@ -1,18 +1,26 @@
+//With enum
 //T9 -- 17 Mar Demo
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.0;
 
 contract Escrow{
 
+/*  Input parameters for deployment:
+    _Buyer: 0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB
+    _Seller: 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2
+    _Arbitrator: 0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db
+    _Price: 20 ETHER
+*/
+
 /*
-State variables: Declare public variables for buyer, seller, arbitrator 裁決人,
-price and an enum for the contract state.
+    State variables: Declare public variables for buyer, seller, arbitrator 裁決人,
+    price and an enum for the contract state.
 
-Seller: This is an address payable type variable that holds the Ethereum
-address of the seller.
+    Seller: This is an address payable type variable that holds the Ethereum
+    address of the seller.
 
-Price: This is a uint type variable that represents the agreed-upon price
-of the transaction in Ether.
+    Price: This is a uint type variable that represents the agreed-upon price
+    of the transaction in Ether.
 
 */
 
@@ -21,7 +29,7 @@ of the transaction in Ether.
     address public arbitrator;
     uint public price;
 
-    enum State {AWAITING_PAYMENT, AWAITING_DELIVERY, COMPLETE,REFUNDED}
+    enum State {AWAITING_PAYMENT, AWAITING_DELIVERY, CONFIRM_PAYMENT, COMPLETE, REFUNDED}
     State public currentState;
 
     //Modifiers: Define access control modifiers for buyers, sellers and
@@ -33,6 +41,11 @@ of the transaction in Ether.
 
     modifier sellerOnly(){
         require(msg.sender == seller,"Only buyer can call this.");
+        _;
+    }
+
+    modifier arbitratorOnly(){
+        require(msg.sender==arbitrator,"Only arbitrator can call this.");
         _;
     }
 
@@ -85,9 +98,9 @@ of the transaction in Ether.
 
 */
 
-    function deposit() external payable buyerOnly inState(State.AWAITING_PAYMENT){
+    function deposit() external payable buyerOnly inState(State.AWAITING_PAYMENT){ //0
             require(msg.value==price, "Incorrect amount.");
-            currentState = State.AWAITING_DELIVERY;
+            currentState = State.AWAITING_DELIVERY; //1
     }
 
 /*  confirmDelivery(): Allows the buyers to confirm delivery, transferring the payment
@@ -97,8 +110,9 @@ of the transaction in Ether.
 
 */
 
-    function confirmDelivery() external payable buyerOnly inState(State.AWAITING_DELIVERY){
-            currentState = State.COMPLETE;
+    function confirmDelivery() external payable buyerOnly inState(State.AWAITING_DELIVERY){ //1
+            currentState = State.CONFIRM_PAYMENT; //2
+
 /*  transfer(): This is a built-in Solidity function that allows transferring Ether from 
     an address payable type variable to another address.
 
@@ -114,11 +128,23 @@ of the transaction in Ether.
 
     //Allows the sellers to refund the buyer, only callable by the seller and in the
     //AWAITING_DELIVERY state
-    function refundBuyer() external sellerOnly inState(State.AWAITING_DELIVERY){
-            currentState = State.REFUNDED;
+    function refundBuyer() external sellerOnly inState(State.AWAITING_DELIVERY){ //1
+            currentState = State.REFUNDED; //4
     //seller.transfer(price) is a statement that transfers the specified price in Ether
     //from the contract's balance to the buyer address.
             buyer.transfer(price);
+    }
+
+    //this function allows the arbitrator to check the balance of the seller
+    //
+    function check_seller_bal() external arbitratorOnly returns (uint256){ //2
+            currentState = State.COMPLETE; //3
+            return address(seller).balance;
+    }
+
+    //for testing purposes only
+    function seller_bal() external view returns(uint256){
+        return address(seller).balance;
     }
 
 }
@@ -128,5 +154,5 @@ of the transaction in Ether.
     with the assistance of an arbitrator.
 
     The buyer deposits a funds, and the seller can either confirm the delivery or refund
-    the buyer
+    the buyer.
 */
