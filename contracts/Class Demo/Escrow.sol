@@ -120,9 +120,7 @@ of the transaction in Ether.
     //from the contract's balance to the buyer address.
             buyer.transfer(price);
     }
-
 }
-
 /*
     This escrow smart contract enables a secure transactiom between a buyer and a seller
     with the assistance of an arbitrator.
