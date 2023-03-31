@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 contract medical{
 
+//--------------------------- settings---------------------------
     //Class: patient
     struct Patient{
         string name;
@@ -12,6 +13,8 @@ contract medical{
     }
 
     address public superVisor;
+    address payable public patient_addr;
+
     //mapping (address => uint) public balances; //Keep check of user's balance
     mapping (address => Patient) public patient; 
     bool public eligibility; //default eligibility is false
@@ -23,8 +26,20 @@ contract medical{
     StageAcc public stageAcc = StageAcc.Init; //0
     Stage public stage = Stage.Init; //0
 
+    constructor(address payable _patient){
+        patient_addr = _patient; //Record the patient's address
+        superVisor = msg.sender;
+        startTime = block.timestamp; //Start time of the whole process
+    }
+
+//---------------------------modifiers---------------------------
     modifier supervisorOnly(){
         require(msg.sender == superVisor,"Only supervisor can call this.");
+        _;
+    }
+
+    modifier patientOnly(){
+        require(msg.sender == patient_addr, "Only patient can set his/her info.");
         _;
     }
 
@@ -33,11 +48,7 @@ contract medical{
         _;
     }
 
-    constructor(){
-        superVisor = msg.sender;
-        startTime = block.timestamp; //Start time of the whole process
-    }
-
+//---------------------------------------------------------------
     function timeNow() public view returns(uint){
         return block.timestamp;
     }
@@ -50,15 +61,22 @@ contract medical{
         }
     }
 
+    function set_name(address _address,string memory _name) public {
+        patient[_address].name = _name;
+    }
+
     //requesting for services (e.g. AME/
     function request(uint) public{
 
     }
 
+/*
     //Check the current (application) status for request services
     function check_status() public{
 
     }
+*/
+
     //Ref: https://ethereum.stackexchange.com/questions/9858/solidity-is-there-a-way-to-get-the-timestamp-of-a-transaction-that-executed
 
     //verifies the signature
