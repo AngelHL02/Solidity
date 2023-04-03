@@ -9,9 +9,9 @@ contract medical{
     hospital: 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2
 
     Others: 
+    0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB
     0xdD870fA1b7C4700F2BD7f44238821C26f7392148
 */
-
 
 //--------------------------- settings---------------------------
     //Class: patient
