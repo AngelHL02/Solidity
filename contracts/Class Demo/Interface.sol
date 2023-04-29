@@ -1,5 +1,5 @@
-pragma solidity ^0.6.0;
 // SPDX-License-Identifier: MIT
+pragma solidity ^0.6.0;
 
 //function signature/title
 //refer to the Counter.sol
